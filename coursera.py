@@ -1,9 +1,10 @@
 import sys
 import json
 import requests
+import string
 from xml.etree import ElementTree
 
-import pandas as pd
+from openpyxl import Workbook
 from bs4 import BeautifulSoup
 
 
@@ -52,9 +53,23 @@ def get_course_info(course_url):
 
 
 def output_courses_info_to_xlsx(filepath, cources_info):
-    df = pd.DataFrame(cources_info)
-    df.to_excel(filepath)
+    wb = Workbook()
+    ws = wb.active
 
+    # Setting order of columns in excel file
+    keys = ['url', 'rating', 'date_start', 'date_end', 'week_count', 'language']
+    ws.append(keys)
+
+    # Making header row bold
+    for letter in string.ascii_uppercase[:len(keys)]:
+        cell = ws['{}1'.format(letter)]
+        cell.font = cell.font.copy(bold=True)
+
+    # Writing data to excel
+    for record in cources_info:
+        ws.append([record[key] for key in keys])
+
+    wb.save(filepath)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
