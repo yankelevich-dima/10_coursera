@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 
 
 TOP_COUNT = 20
+DEFAULT_FILEPATH = 'Cources.xlsx'
 
 
 def get_courses_list():
@@ -74,16 +75,15 @@ def output_courses_info_to_xlsx(filepath, cources_info):
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         filepath = sys.argv[1]
-        courses = get_courses_list()
-        courses_infos = []
-        for course in courses:
-            info = get_course_info(course)
-            if info is not None:
-                print('Added {}'.format(info['url']))
-                courses_infos.append(info)
-                if len(courses_infos) == TOP_COUNT:
-                    break
-        output_courses_info_to_xlsx(filepath, courses_infos)
-
     else:
-        print('Please enter path to excel file')
+        filepath = DEFAULT_FILEPATH
+    courses = get_courses_list()
+    courses_infos = []
+    for course in courses:
+        info = get_course_info(course)
+        if info is not None:
+            print('Added {}'.format(info['url']))
+            courses_infos.append(info)
+            if len(courses_infos) == TOP_COUNT:
+                break
+    output_courses_info_to_xlsx(filepath, courses_infos)
