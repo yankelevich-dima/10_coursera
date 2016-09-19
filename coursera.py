@@ -4,6 +4,7 @@ import requests
 import string
 from xml.etree import ElementTree
 
+from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
 
@@ -27,8 +28,11 @@ def get_course_info(course_url):
 
     course_info = {'url': course_url}
 
-    for function in filter(lambda x: x.startswith('get_'), dir(helpers)):
-        course_info[function.split('get_')[1]] = getattr(helpers, function)(response)
+    keys = ['rating', 'start_date', 'end_date', 'week_count', 'language']
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    for element in keys:
+        course_info[element] = getattr(helpers, 'get_{}'.format(element))(soup)
 
     # If one of field is None - return None
     return course_info if None not in course_info.values() else None
