@@ -25,19 +25,12 @@ def get_week_count(soup):
     return None
 
 
-def get_start_date(soup):
+def get_date(soup):
     json_data = soup.select('.rc-CourseGoogleSchemaMarkup')
     if json_data:
         course_data = json.loads(json_data[0].text)
-        return course_data['hasCourseInstance'][0].get('startDate', None)
+        start_date = course_data['hasCourseInstance'][0].get('startDate', None)
+        end_date = course_data['hasCourseInstance'][0].get('endDate', None)
+        return start_date, end_date
 
-    return None
-
-
-def get_end_date(soup):
-    json_data = soup.select('.rc-CourseGoogleSchemaMarkup')
-    if json_data:
-        course_data = json.loads(json_data[0].text)
-        return course_data['hasCourseInstance'][0].get('endDate', None)
-
-    return None
+    return None, None

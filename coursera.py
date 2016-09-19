@@ -28,11 +28,12 @@ def get_course_info(course_url):
 
     course_info = {'url': course_url}
 
-    keys = ['rating', 'start_date', 'end_date', 'week_count', 'language']
     soup = BeautifulSoup(response.content, 'html.parser')
 
-    for element in keys:
-        course_info[element] = getattr(helpers, 'get_{}'.format(element))(soup)
+    course_info['rating'] = helpers.get_rating(soup)
+    course_info['start_date'], course_info['end_date'] = helpers.get_date(soup)
+    course_info['week_count'] = helpers.get_week_count(soup)
+    course_info['language'] = helpers.get_language(soup)
 
     # If one of field is None - return None
     return course_info if None not in course_info.values() else None
